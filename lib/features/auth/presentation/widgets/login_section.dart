@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interns_blog/features/auth/presentation/bloc/third_part_login/third_party_login_bloc.dart';
 
 import '../bloc/form_bloc/form_bloc.dart';
 import '../pages/signup.dart';
@@ -145,8 +146,9 @@ class _LoginSectionState extends State<LoginSection> {
                             return InkWell(
                               onTap: () {
                                 context.read<FormBloc>().add(
-                                    const FormSubmitedEvent(
-                                        value: Status.signIn));
+                                      const FormSubmitedEvent(
+                                          value: Status.signIn),
+                                    );
                               },
                               child: Container(
                                 height: height / 15,
@@ -164,6 +166,51 @@ class _LoginSectionState extends State<LoginSection> {
                               ),
                             );
                           },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            //! add funtionalty
+                            context
+                                .read<ThirdPartyLoginBloc>()
+                                .add(SignInWithGoogleEvent());
+                          },
+                          child: Container(
+                            height: height / 22,
+                            decoration: BoxDecoration(
+                              color: Colors.red[400],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: BlocBuilder<ThirdPartyLoginBloc,
+                                ThirdPartyLoginState>(
+                              builder: (context, state) {
+                                if (state is ThirdPartyLoginLoadingState) {
+                                  return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: const [
+                                        Icon(Icons.g_mobiledata_outlined),
+                                        Text('Join Us With Google'),
+                                        SizedBox(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      ]);
+                                }
+                                return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: const [
+                                      Icon(Icons.g_mobiledata_outlined),
+                                      Text('Join Us With Google'),
+                                      SizedBox(
+                                        child: null,
+                                      )
+                                    ]);
+                              },
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: height / 17,

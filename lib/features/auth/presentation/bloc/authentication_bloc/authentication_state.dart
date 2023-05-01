@@ -19,6 +19,9 @@ class AuthSuccessState extends AuthenticationState {
 }
 
 class AuthFailureState extends AuthenticationState {
+  final String? failureMessage;
+
+  const AuthFailureState({this.failureMessage});
   @override
   List<Object> get props => [];
 }

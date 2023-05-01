@@ -5,11 +5,11 @@ import '../../domain/repository/auth_repository.dart';
 import '../../domain/entities/user_entity.dart';
 
 class AuthenticationRepositoryImpl extends AuthenticationRepository {
-  AuthenticationService service = AuthenticationServiceImpl();
+  AuthenticationService authService = AuthenticationServiceImpl();
 
   @override
   Stream<UserModel> getCurrentUser() {
-    return service.retriveCurrenUser();
+    return authService.retriveCurrenUser();
   }
 
   @override
@@ -21,7 +21,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   @override
   Future<UserCredential?> signIn(UserModel user) {
     try {
-      return service.signin(user);
+      return authService.signin(user);
     } on FirebaseAuthException catch (e) {
       throw FirebaseAuthException(code: e.code, message: e.message);
     }
@@ -29,13 +29,22 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
 
   @override
   Future<void> signOut() {
-    return service.signout();
+    return authService.signout();
   }
 
   @override
   Future<UserCredential?> signUp(UserModel user) {
     try {
-      return service.signup(user);
+      return authService.signup(user);
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseAuthException(code: e.code, message: e.message);
+    }
+  }
+
+  @override
+  Future<UserCredential> signInWithGoogle() async {
+    try {
+      return await authService.signInWithGoogle();
     } on FirebaseAuthException catch (e) {
       throw FirebaseAuthException(code: e.code, message: e.message);
     }

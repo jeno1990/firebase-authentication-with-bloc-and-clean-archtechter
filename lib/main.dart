@@ -6,6 +6,7 @@ import 'package:interns_blog/features/auth/data/repository/authentication_reposi
 import 'package:interns_blog/features/auth/data/repository/user_repository_impl.dart';
 import 'package:interns_blog/features/auth/presentation/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:interns_blog/features/auth/presentation/bloc/form_bloc/form_bloc.dart';
+import 'package:interns_blog/features/auth/presentation/bloc/third_part_login/third_party_login_bloc.dart';
 import 'package:interns_blog/features/auth/presentation/pages/login.dart';
 
 void main() async {
@@ -29,6 +30,10 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) => AuthenticationBloc(
                 authenticationRepository: AuthenticationRepositoryImpl())
               ..add(AuthStartedEvent()),
+          ),
+          BlocProvider(
+            create: (BuildContext context) => ThirdPartyLoginBloc(
+                authenticationRepository: AuthenticationRepositoryImpl()),
           ),
           BlocProvider<FormBloc>(
             create: (BuildContext context) => FormBloc(

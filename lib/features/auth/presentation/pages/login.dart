@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:interns_blog/core/App/app.dart';
 import 'package:interns_blog/features/auth/presentation/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:interns_blog/features/auth/presentation/bloc/form_bloc/form_bloc.dart';
+import 'package:interns_blog/features/auth/presentation/bloc/third_part_login/third_party_login_bloc.dart';
 
 import '../widgets/login_section.dart';
 
@@ -17,7 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
     return MultiBlocListener(
       listeners: [
         BlocListener<FormBloc, FormValidate>(listener: (context, state) {
@@ -33,6 +33,18 @@ class _LoginPageState extends State<LoginPage> {
             context.read<AuthenticationBloc>().add(AuthStartedEvent());
           }
         }),
+        BlocListener<ThirdPartyLoginBloc, ThirdPartyLoginState>(
+          listener: (context, state) {
+            if (state is ThirdPartyLoginSuccessState) {
+              context.read<AuthenticationBloc>().add(AuthStartedEvent());
+            } else if (state is ThidPartLoginFailedState) {
+              showDialog(
+                  context: context,
+                  builder: (context) => const ErrorDialog(
+                      errorMessage: 'Authentication was not successful'));
+            }
+          },
+        ),
         BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthSuccessState) {

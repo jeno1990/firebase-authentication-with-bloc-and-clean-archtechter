@@ -194,9 +194,11 @@ class FormBloc extends Bloc<FormEvent, FormValidate> {
         if (authUser.user!.emailVerified) {
           updatedUser.isVerified = true;
         }
-        print('-----------updated user ${updatedUser.isVerified}');
+        // print('-----------updated user ${updatedUser.isVerified}');
         if (updatedUser.isVerified!) {
-          emit(state.copyWith(isLoading: false, errorMessage: ""));
+          emit(
+            state.copyWith(isLoading: false, errorMessage: ""),
+          );
         } else {
           emit(state.copyWith(
               isFormValid: false,

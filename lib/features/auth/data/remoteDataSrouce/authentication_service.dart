@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:interns_blog/features/auth/domain/entities/user_entity.dart';
 
 abstract class AuthenticationService {
@@ -7,10 +8,12 @@ abstract class AuthenticationService {
   Future<UserCredential?> signin(UserModel user);
   Future<void> verifyEmail();
   Future<void> signout();
+  Future<UserCredential> signInWithGoogle();
 }
 
 class AuthenticationServiceImpl extends AuthenticationService {
   FirebaseAuth auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   Stream<UserModel> retriveCurrenUser() {
@@ -52,6 +55,24 @@ class AuthenticationServiceImpl extends AuthenticationService {
     User? user = auth.currentUser;
     if (user != null && !user.emailVerified) {
       return await user.sendEmailVerification();
+    }
+  }
+
+  @override
+  Future<UserCredential> signInWithGoogle() async {
+    try {
+      // bigin interactive sign in process
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      // obtain auth derails from requrest
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
+      // create a new credentilal for user
+      final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+      // finally sign in
+      return await auth.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseAuthException(code: e.code, message: e.message);
     }
   }
 
