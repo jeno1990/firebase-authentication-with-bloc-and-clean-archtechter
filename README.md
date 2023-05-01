@@ -1,4 +1,4 @@
-# Firenase authentication with bloc and clean archtechture
+# Firebase authentication with bloc and clean archtechture
 
 
 ## Getting Started
